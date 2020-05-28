@@ -4,19 +4,32 @@ const commands = {
   NewPlayground: "extension.araya.dev.newplayground",
 } as const;
 
-export function activate(ctx: vc.ExtensionContext) {
-  console.log("araya.dev extension is now activated");
+const createNewPlayground = async (playgroundDir: vc.Uri, name: string) => {
+  await vc.workspace.fs.createDirectory(vc.Uri.joinPath(playgroundDir, name));
+};
 
+export function activate(ctx: vc.ExtensionContext) {
   const newPlayground = vc.commands.registerCommand(
     commands.NewPlayground,
     async () => {
       const input = await vc.window.showInputBox({ prompt: "playground name" });
-      vc.window.showInformationMessage(`New Playground: ${input}`);
+      if (!input) throw "please input a new playground name";
       const wsFolders = vc.workspace.workspaceFolders;
-      const pgDir = wsFolders?.find((f) => f.name === "playground.araya.dev");
-      if (pgDir) {
-      } else if(wsFolders?.[0].uri){
-        vc.workspace.fs.readDirectory(wsFolders[0].uri)
+      const rootPlaygroundDir = wsFolders?.find(
+        (f) => f.name === "playground.araya.dev"
+      );
+      if (rootPlaygroundDir) {
+        await createNewPlayground(rootPlaygroundDir.uri, input);
+      } else if (wsFolders?.[0].uri) {
+        const dirents = await vc.workspace.fs.readDirectory(wsFolders[0].uri);
+        const playgroundDir = dirents.find(
+          (dr) => dr[0] === "playground.araya.dev"
+        );
+        if (!playgroundDir) throw "playground.araya.dev is not found";
+        await createNewPlayground(
+          vc.Uri.file(`${wsFolders[0].uri.path}/${playgroundDir[0]}`),
+          input
+        );
       }
       // vscode.window
       //   .showInputBox({ prompt: "playground name" })
