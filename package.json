@@ -1,9 +1,34 @@
 {
   "name": "araya.dev-vscode-extension",
   "version": "0.0.0",
-  "main": "index.js",
+  "displayName": "araya.dev",
+  "description": "vscode extension to develop araya.dev",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.araya.dev.newplayground"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.araya.dev.newplayground",
+        "title": "New playground"
+      }
+    ]
+  },
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.22.0"
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -p ./ -watch"
+  },
   "repository": "git@github.com:arayaryoma/araya.dev-vscode-extension.git",
   "author": "arayaryoma <r1o.ryoma.abe@gmail.com>",
+  "publisher": "araya",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.0.5",
