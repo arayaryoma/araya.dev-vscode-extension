@@ -24,7 +24,8 @@
   "scripts": {
     "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -p ./ -watch"
+    "watch": "tsc -p ./ -watch",
+    "package": "vsce package"
   },
   "repository": "git@github.com:arayaryoma/araya.dev-vscode-extension.git",
   "author": "arayaryoma <r1o.ryoma.abe@gmail.com>",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/node": "^14.0.5",
     "@types/vscode": "^1.45.1",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "vsce": "^1.75.0"
   }
 }
