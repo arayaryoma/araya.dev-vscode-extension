@@ -1,4 +1,6 @@
 import * as vc from "vscode";
+import { html } from "./templates/playground";
+import { TextEncoder } from "util";
 
 const commands = {
   NewPlayground: "extension.araya.dev.newplayground",
@@ -6,6 +8,18 @@ const commands = {
 
 const createNewPlayground = async (playgroundDir: vc.Uri, name: string) => {
   await vc.workspace.fs.createDirectory(vc.Uri.joinPath(playgroundDir, name));
+  await vc.workspace.fs.writeFile(
+    vc.Uri.joinPath(playgroundDir, name, "index.html"),
+    new TextEncoder().encode(html(name))
+  );
+  await vc.workspace.fs.writeFile(
+    vc.Uri.joinPath(playgroundDir, name, "style.css"),
+    new Uint8Array()
+  );
+  await vc.workspace.fs.writeFile(
+    vc.Uri.joinPath(playgroundDir, name, "main.js"),
+    new Uint8Array()
+  );
 };
 
 export function activate(ctx: vc.ExtensionContext) {
@@ -31,17 +45,10 @@ export function activate(ctx: vc.ExtensionContext) {
           input
         );
       }
-      // vscode.window
-      //   .showInputBox({ prompt: "playground name" })
-      //   .then((input) => {
-      //     vscode.window.showInformationMessage(`New Playground: ${input}`);
-      //     console.log(vscode.workspace.workspaceFolders);
-      //   });
     }
   );
   ctx.subscriptions.push(newPlayground);
 }
 
 export function deactivate() {
-  console.log("araya.dev extension is now deactivated");
 }
